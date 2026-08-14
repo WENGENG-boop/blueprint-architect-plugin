@@ -98,7 +98,53 @@ Project names must contain lowercase letters, digits, and single hyphens. Existi
 
 ## Privacy and networking
 
-PRD content stays in the active Codex workflow. GitHub lookup is optional and runs only when the user requests public implementation references. The lookup sends a minimized list of explicit technology/keyword terms, never the PRD itself. A token may be supplied programmatically for higher rate limits; it is not logged. Network and rate-limit failures are reported separately from an empty result and do not block blueprint generation.
+PRD content stays in the active Codex workflow. GitHub lookup is optional and runs only when the user requests public implementation references. The lookup sends a minimized list of confirmed technology and user-approved keyword terms, never PRD prose, secrets, customer names, or private requirements. Network and rate-limit failures are reported separately from an empty result and do not block blueprint generation.
+
+## Configure GitHub reference search
+
+No setup is required for occasional use: public repository search works anonymously, subject to GitHub's stricter unauthenticated rate limits. For more reliable or frequent searches, configure a token in the environment. The plugin uses `GITHUB_TOKEN` first and falls back to `GH_TOKEN`; an explicit token supplied by code takes priority.
+
+Use a fine-grained personal access token with only the minimum read-only repository metadata access needed for public search. Review GitHub's official [fine-grained token permissions](https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens) and [REST API rate limits](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api). Never commit a token, paste it into a PRD or chat, store it in plugin files, or pass it with a command-line argument.
+
+### Windows PowerShell: current session
+
+Set the token before launching Codex from the same terminal:
+
+```powershell
+$env:GITHUB_TOKEN = "github_pat_..."
+codex
+```
+
+### Windows: persistent for the current user
+
+```powershell
+[Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "github_pat_...", "User")
+```
+
+Quit every Codex Desktop window completely and reopen the app. Already-running desktop applications do not receive newly added environment variables.
+
+### macOS or Linux
+
+```bash
+export GITHUB_TOKEN="github_pat_..."
+codex
+```
+
+If Codex is launched from a desktop icon, it may not inherit variables from your shell profile. Launch it from the configured terminal or set the variable in the desktop session's environment.
+
+After installation and configuration, ask the Skill directly; users do not need to locate the bundled script:
+
+```text
+$blueprint-architect Find public GitHub implementation references for the confirmed stack.
+```
+
+For maintainers testing a cloned repository from its root:
+
+```powershell
+node --experimental-strip-types "plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/search-github.ts" --technologies "nextjs,postgresql" --keywords "saas,dashboard" --min-stars 100 --max-results 5
+```
+
+The command prints structured JSON. `ok`, `empty`, `rate_limited`, and `unavailable` are separate non-fatal outcomes; invalid arguments exit with code 2. There is intentionally no `--token` option.
 
 ## Development
 

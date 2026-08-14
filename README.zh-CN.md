@@ -98,7 +98,53 @@ $blueprint-architect Explain the fundamental product problem in this PRD and lis
 
 ## 隐私与网络
 
-PRD 内容保留在当前 Codex 工作流内。GitHub 查询是可选功能，并且只有用户要求公开实现参考时才会运行。查询仅发送最少量、由用户明确指定的技术和关键词，不会发送 PRD 本身。程序可以接收 Token 以提高速率限制，但不会记录它。网络故障和速率限制会与“没有搜索结果”明确区分，并且不会阻止蓝图生成。
+PRD 内容保留在当前 Codex 工作流内。GitHub 查询是可选功能，并且只有用户要求公开实现参考时才会运行。查询只发送已确认的技术名和用户同意公开的关键词，不会发送 PRD 原文、密钥、客户名称或私有需求。网络故障和速率限制会与“没有搜索结果”明确区分，并且不会阻止蓝图生成。
+
+## 配置 GitHub 参考搜索
+
+偶尔使用不需要任何配置：公开仓库搜索可以匿名运行，但会受到 GitHub 更严格的未认证速率限制。需要更稳定或更频繁地搜索时，请通过环境变量配置 Token。插件优先读取 `GITHUB_TOKEN`，没有时再读取 `GH_TOKEN`；代码显式传入的 Token 优先级最高。
+
+建议创建细粒度个人访问令牌，只授予公开搜索所需的最小只读仓库元数据权限。请参考 GitHub 官方的[细粒度令牌权限说明](https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens)和 [REST API 速率限制说明](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api)。不要把 Token 提交到仓库、粘贴进 PRD 或聊天、存进插件文件，也不要作为命令行参数传递。
+
+### Windows PowerShell：仅当前会话
+
+先设置环境变量，再从同一个终端启动 Codex：
+
+```powershell
+$env:GITHUB_TOKEN = "github_pat_..."
+codex
+```
+
+### Windows：为当前用户永久保存
+
+```powershell
+[Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "github_pat_...", "User")
+```
+
+设置后要完全退出并重新打开 Codex Desktop。已经运行的桌面应用无法自动获得新添加的环境变量。
+
+### macOS 或 Linux
+
+```bash
+export GITHUB_TOKEN="github_pat_..."
+codex
+```
+
+如果通过桌面图标启动 Codex，它可能不会继承 Shell 配置文件中的环境变量。请从已经设置变量的终端启动，或把变量配置到桌面会话环境中。
+
+安装并配置后，直接这样要求 Skill 搜索即可，普通用户不需要定位插件内部脚本：
+
+```text
+$blueprint-architect Find public GitHub implementation references for the confirmed stack.
+```
+
+维护者在克隆仓库根目录中可以直接测试：
+
+```powershell
+node --experimental-strip-types "plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/search-github.ts" --technologies "nextjs,postgresql" --keywords "saas,dashboard" --min-stars 100 --max-results 5
+```
+
+命令会输出结构化 JSON。`ok`、`empty`、`rate_limited` 和 `unavailable` 是互相独立、不会中断蓝图生成的结果；参数错误退出码为 2。为了安全，命令故意不提供 `--token` 参数。
 
 ## 开发
 

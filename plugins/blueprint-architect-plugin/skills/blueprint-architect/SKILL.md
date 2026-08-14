@@ -28,7 +28,9 @@ Turn a product idea or PRD into a reviewed blueprint. Keep product clarification
 - If `request_user_input` is unavailable, show no prose choices and stop before asking or proceeding. Say: "The structured selector requires Plan mode. Enter `/plan`, then reinvoke `$blueprint-architect`."
 - Let the user make final decisions. Prefer the simplest architecture satisfying confirmed constraints.
 - Distinguish requirements from assumptions and future ideas. Do not invent metrics, budgets, integrations, or user needs.
-- Search GitHub only when the user requests implementation references. Use `scripts/search-github.ts` with a minimized explicit query; disclose failures and continue without enrichment.
+- Search GitHub only when the user explicitly requests public implementation references. Build the query only from confirmed technology terms and user-approved public keywords. Never send PRD prose, secrets, customer names, or private requirements.
+- Resolve `scripts/search-github.ts` relative to this `SKILL.md`, then run `node --experimental-strip-types "<skill-directory>/scripts/search-github.ts" --technologies "<comma-separated-confirmed-technologies>" --keywords "<comma-separated-user-approved-keywords>"`. Parse its JSON output.
+- Treat `ok`, `empty`, `rate_limited`, and `unavailable` as distinct outcomes. Disclose the outcome and continue without enrichment when references are unavailable. If rate limited, explain that anonymous lookup remains optional and the user may configure `GITHUB_TOKEN` or `GH_TOKEN` for authenticated requests.
 
 ## Output
 

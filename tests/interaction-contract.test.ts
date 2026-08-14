@@ -32,3 +32,17 @@ test("bundled material contains no stale typed-choice prompt", async () => {
     assert.doesNotMatch(content, /Reply with (?:A|B|C)/i, file);
   }
 });
+
+test("skill defines a safe and executable GitHub lookup contract", async () => {
+  const skill = await readFile(join(skillRoot, "SKILL.md"), "utf8");
+  for (const phrase of [
+    "explicitly requests public implementation references",
+    "node --experimental-strip-types",
+    "GITHUB_TOKEN",
+    "GH_TOKEN",
+    "PRD prose, secrets, customer names, or private requirements",
+    "rate_limited",
+  ]) {
+    assert.ok(skill.includes(phrase), `missing GitHub lookup contract: ${phrase}`);
+  }
+});

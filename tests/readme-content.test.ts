@@ -37,6 +37,11 @@ test("English and Chinese READMEs provide reciprocal navigation and equivalent e
     "codex plugin marketplace add WENGENG-boop/blueprint-architect-plugin",
     "codex plugin add blueprint-architect-plugin@blueprint-architect",
     "$blueprint-architect",
+    "GITHUB_TOKEN",
+    "GH_TOKEN",
+    "https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens",
+    "https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api",
+    "Find public GitHub implementation references for the confirmed stack",
   ]) {
     assert.ok(english.includes(required), `English README is missing ${required}`);
     assert.ok(chinese.includes(required), `Chinese README is missing ${required}`);
@@ -48,13 +53,15 @@ test("English and Chinese READMEs provide reciprocal navigation and equivalent e
     "赞助商 / 广告",
     "Plan 模式",
     "两个相互独立的项目",
+    "配置 GitHub 参考搜索",
+    "完全退出并重新打开 Codex Desktop",
   ]) {
     assert.ok(chinese.includes(requiredChinese), `Chinese README is missing ${requiredChinese}`);
   }
 
   const headingOrders = [
-    [english, ["## Why Blueprint Architect comes before Superpowers", "## What it changes", "## Install", "## Use", "## Generated output", "## Privacy and networking", "## Development", "## Known limitations", "## License"]],
-    [chinese, ["## 为什么 Blueprint Architect 应该先于 Superpowers 使用", "## 功能", "## 安装", "## 使用", "## 生成内容", "## 隐私与网络", "## 开发", "## 已知限制", "## 许可证"]],
+    [english, ["## Why Blueprint Architect comes before Superpowers", "## What it changes", "## Install", "## Use", "## Generated output", "## Privacy and networking", "## Configure GitHub reference search", "## Development", "## Known limitations", "## License"]],
+    [chinese, ["## 为什么 Blueprint Architect 应该先于 Superpowers 使用", "## 功能", "## 安装", "## 使用", "## 生成内容", "## 隐私与网络", "## 配置 GitHub 参考搜索", "## 开发", "## 已知限制", "## 许可证"]],
   ] as const;
 
   for (const [content, headings] of headingOrders) {
