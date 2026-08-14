@@ -1,0 +1,20 @@
+{
+  "name": "blueprint-architect",
+  "interface": {
+    "displayName": "Blueprint Architect"
+  },
+  "plugins": [
+    {
+      "name": "blueprint-architect-plugin",
+      "source": {
+        "source": "local",
+        "path": "./plugins/blueprint-architect-plugin"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "blueprint-architect-plugin",
+  "version": "0.1.0",
+  "description": "Turn product requirements into reviewed, compatible project blueprints before coding.",
+  "author": {
+    "name": "WENGENG-boop"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Blueprint Architect Plugin",
+    "shortDescription": "Interpret PRDs and design compatible project blueprints.",
+    "longDescription": "Blueprint Architect explains the product problem, guides material architecture decisions with structured selectors, checks compatibility, and generates a confirmed project blueprint.",
+    "developerName": "WENGENG-boop",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Use $blueprint-architect to interpret my PRD and guide me through a compatible project blueprint."
+  }
+}

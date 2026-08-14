@@ -1,0 +1,7 @@
+interface:
+  display_name: "Blueprint Architect"
+  short_description: "Interpret PRDs and plan compatible project blueprints"
+  default_prompt: "Use $blueprint-architect to analyze this PRD, explain its fundamental product problem, and guide material decisions. Use request_user_input for every decision, compatibility correction, and final confirmation: exactly one question per call, 2-3 mutually exclusive options, recommendation first ending in '(Recommended)', and one concise trade-off per option. Never use typed choices. If the selector is unavailable, stop and direct me to /plan before reinvoking the skill."
+
+policy:
+  allow_implicit_invocation: true
