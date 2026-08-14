@@ -1,5 +1,7 @@
 # Blueprint Architect for Codex
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 Blueprint Architect turns a product idea or PRD into a reviewed project blueprint before implementation begins. It first explains the fundamental user problem, then guides only the material product and architecture decisions, checks compatibility, and generates files only after final confirmation.
 
 ## Why Blueprint Architect comes before Superpowers

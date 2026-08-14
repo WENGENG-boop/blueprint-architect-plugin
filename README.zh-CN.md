@@ -1,0 +1,130 @@
+# Blueprint Architect for Codex
+
+[English](README.md) | [简体中文](README.zh-CN.md)
+
+Blueprint Architect 把产品想法或 PRD 转化为经过审查的项目蓝图，然后再进入实现阶段。它会先解释最根本的用户问题，再引导用户完成真正影响产品和架构的关键决策，检查技术选择之间的兼容性，并且只有在用户最终确认后才生成文件。
+
+## 为什么 Blueprint Architect 应该先于 Superpowers 使用
+
+大多数开发团队浪费数周时间，并不是因为写不出代码，而是因为模糊的 PRD 过早进入了实现阶段：
+
+- 团队还没有就最根本的用户问题达成一致，就开始交付功能；
+- 前端、后端、数据库、身份验证和部署方案被分别选择，直到后期才发现彼此冲突；
+- 利益相关者在缺少必要上下文的情况下，被要求回答宽泛的技术问题；
+- 因为缺少一份可追溯到 PRD 的共享蓝图，不同编码 Agent 按照不同假设工作；
+- 严谨的执行流程反而更快地做出了错误的产品。
+
+[Superpowers](https://github.com/obra/superpowers) 帮助编码 Agent 以严谨的方法执行软件开发工作。**Blueprint Architect 解决的是更早、代价也更高的风险：在实现开始前，避免做错产品或过早锁定不兼容的架构。**
+
+| 开发者面对的关键问题 | Blueprint Architect 的优势 | Superpowers 的重点 |
+|---|---|---|
+| 我们解决的是正确问题吗？ | 从 PRD 开始，在讨论技术之前识别最根本的用户问题、约束、未知项和明确不做的内容。 | 作为更完整开发方法论的一部分，把用户提出的软件工作逐步细化成设计。 |
+| 技术栈能够协同工作吗？ | 将每一个已确认的技术决策与此前选择进行兼容性检查，在生成文件之前暴露冲突。 | 主要关注方向确定之后的规范化计划与实现。 |
+| 利益相关者能够有把握地做决定吗？ | 通过 Plan 模式下的结构化选择器，每次只展示一个关键决策，并提供有依据的推荐和简洁权衡。 | 使用苏格拉底式设计澄清和工作流技能管理更完整的开发过程。 |
+| 实现阶段会拿到什么？ | 生成可追溯到 PRD 的决策记录，以及经过确认的目录和模块蓝图。 | 生成实施计划，并推动 TDD、调试、评审、子 Agent 执行和分支收尾。 |
+| 应该在什么时候使用？ | 当需求、范围、技术栈或架构仍需明确并验证兼容性时，**先使用 Blueprint Architect**。 | 当团队已经准备好系统化实现确认后的方向时，**接着使用 Superpowers**。 |
+
+> **推荐工作流：**先使用 Blueprint Architect 避免需求和架构错误；再使用 Superpowers 对确认后的蓝图进行计划、实现、测试、评审和收尾。
+
+### 以下情况应该先选择 Blueprint Architect
+
+- 当前输入仍然是产品想法或 PRD，而不是可以直接实现的完整规格；
+- 利益相关者需要先理解最根本的问题，再选择技术；
+- 技术决策需要逐项解释和确认；
+- 团队需要在编码开始前获得经过兼容性检查、可追溯到 PRD 的项目蓝图。
+
+Blueprint Architect 和 Superpowers 是两个相互独立的项目，各自解决互补的核心问题；本对比不代表双方存在从属、合作或附属关系。
+
+> [!NOTE]
+> **赞助商 / 广告 - [WeoAPI](https://sub.weo.asia)**
+>
+> WeoAPI 将其服务介绍为稳定的 API 中转服务，并不定期提供福利活动。目前新注册账户可获得 `$0.20` 额度。额度、可用性、价格和活动条款均由 WeoAPI 提供并可能发生变化，请访问站点查看最新信息。
+
+## 功能
+
+- 解读 PRD，而不是强制用户完成通用问卷；
+- 使用 Codex 的结构化选择器进行决策，而不是让用户输入 A/B/C；
+- 根据兼容性规则检查已确认的技术选择；
+- 生成决策记录、目录规划、模块文档和实施检查清单；
+- 仅在用户明确要求实现参考时，可选搜索公开 GitHub 仓库。
+
+它不会实现应用、执行部署、发布密钥，也不会把尚未执行的检查描述为已经通过。
+
+## 安装
+
+需要使用支持插件市场的 Codex 版本。
+
+```powershell
+codex plugin marketplace add WENGENG-boop/blueprint-architect-plugin
+codex plugin add blueprint-architect-plugin@blueprint-architect
+```
+
+刷新此前已经添加的插件市场：
+
+```powershell
+codex plugin marketplace upgrade blueprint-architect
+```
+
+安装后请重启 Codex 或创建一个新任务，以刷新 Skill 列表。
+
+## 使用
+
+进入 Plan 模式，附加或粘贴 PRD，然后调用：
+
+```text
+$blueprint-architect Analyze this PRD and produce a project blueprint.
+```
+
+工作流进入决策阶段后必须使用 Plan 模式，因为该 Skill 会通过 `request_user_input` 在对话下方显示结构化选择器。如果选择器不可用，它会停止执行，而不会退回到文字选项。
+
+如果只需要解读 PRD：
+
+```text
+$blueprint-architect Explain the fundamental product problem in this PRD and list the missing requirements. Do not create files.
+```
+
+插件不包含个人 `/prompts:blueprint` 快捷命令。`$blueprint-architect` 是可移植的插件调用方式。
+
+## 生成内容
+
+用户确认创建文件后，内置生成器可以非破坏性地创建项目蓝图，其中包括：
+
+- 根项目说明和已确认的技术选择；
+- 应用、组件、领域/集成、测试、公共资源和类型目录；
+- 模块职责和接口文档；
+- 尚未完成的实现和验证工作清单。
+
+项目名称只能包含小写字母、数字和单个连字符。生成器绝不会覆盖已经存在的目标目录。
+
+## 隐私与网络
+
+PRD 内容保留在当前 Codex 工作流内。GitHub 查询是可选功能，并且只有用户要求公开实现参考时才会运行。查询仅发送最少量、由用户明确指定的技术和关键词，不会发送 PRD 本身。程序可以接收 Token 以提高速率限制，但不会记录它。网络故障和速率限制会与“没有搜索结果”明确区分，并且不会阻止蓝图生成。
+
+## 开发
+
+需要 Node.js 22 或更高版本。
+
+```powershell
+npm install
+npm run validate
+```
+
+发布验证包括 TypeScript 检查、资源解析、交互契约检查、生成器安全测试、模拟 GitHub 搜索测试和仓库清单检查。维护者还应运行 Codex 安装目录中附带的官方验证器：
+
+```powershell
+python "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" "plugins\blueprint-architect-plugin\skills\blueprint-architect"
+python "$env:USERPROFILE\.codex\skills\.system\plugin-creator\scripts\validate_plugin.py" "plugins\blueprint-architect-plugin"
+```
+
+拉取请求要求请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+## 已知限制
+
+- 结构化选择器需要 Plan 模式以及能够提供 `request_user_input` 的 Codex 客户端；
+- 兼容性规则仅作为建议，具体部署限制仍需根据供应商最新文档进行核实；
+- GitHub 实现参考搜索是尽力而为的可选功能，离线时不可用；
+- 本仓库分发的是 Codex Plugin，不是 npm CLI、MCP 服务器或 Web 应用。
+
+## 许可证
+
+[MIT](LICENSE)
