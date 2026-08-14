@@ -52,7 +52,11 @@ Blueprint Architect 和 Superpowers 是两个相互独立的项目，各自解�
 
 ## 安装
 
-需要使用支持插件市场的 Codex 版本。
+Blueprint Architect 既可以作为完整 Codex Plugin 安装，也可以只作为独立 Skill 安装。请选择其中一种方式，不要同时安装两份。
+
+### 方式一：作为 Plugin 安装（推荐）
+
+这是大多数用户最方便的方式，支持由插件市场统一发现和更新，需要使用支持插件市场的 Codex 版本。
 
 ```powershell
 codex plugin marketplace add WENGENG-boop/blueprint-architect-plugin
@@ -65,7 +69,25 @@ codex plugin add blueprint-architect-plugin@blueprint-architect
 codex plugin marketplace upgrade blueprint-architect
 ```
 
-安装后请重启 Codex 或创建一个新任务，以刷新 Skill 列表。
+### 方式二：只安装独立 Skill
+
+如果只想使用 `$blueprint-architect`，不希望注册插件市场，可以选择这种方式。安装器会下载完整 Skill 目录，其中包括脚本、模板、兼容性规则和 GitHub 参考搜索功能。
+
+Windows PowerShell：
+
+```powershell
+python "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo WENGENG-boop/blueprint-architect-plugin --path plugins/blueprint-architect-plugin/skills/blueprint-architect
+```
+
+macOS 或 Linux：
+
+```bash
+python3 "$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py" --repo WENGENG-boop/blueprint-architect-plugin --path plugins/blueprint-architect-plugin/skills/blueprint-architect
+```
+
+独立方式会安装到 `$CODEX_HOME/skills/blueprint-architect`，通常就是 `~/.codex/skills/blueprint-architect`。它不会添加插件市场，也不会安装额外的 CLI 或 MCP 服务。
+
+无论选择哪种方式，安装后都要重启 Codex 或创建一个新任务，以刷新 Skill 列表。之后进入 Plan 模式并调用 `$blueprint-architect`。
 
 ## 使用
 

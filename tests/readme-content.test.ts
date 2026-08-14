@@ -34,6 +34,28 @@ test("READMEs state that anonymous GitHub search needs no token", async () => {
   assert.match(chinese, /Token 完全可选/);
 });
 
+test("READMEs document both Plugin and standalone Skill installation", async () => {
+  const [english, chinese] = await Promise.all([
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(new URL("../README.zh-CN.md", import.meta.url), "utf8"),
+  ]);
+  const sharedInstallDetails = [
+    "--repo WENGENG-boop/blueprint-architect-plugin",
+    "--path plugins/blueprint-architect-plugin/skills/blueprint-architect",
+    "$CODEX_HOME/skills/blueprint-architect",
+  ];
+
+  for (const required of sharedInstallDetails) {
+    assert.ok(english.includes(required), `English README is missing standalone install detail: ${required}`);
+    assert.ok(chinese.includes(required), `Chinese README is missing standalone install detail: ${required}`);
+  }
+  assert.match(english, /install as a Plugin \(recommended\)/i);
+  assert.match(english, /install only the standalone Skill/i);
+  assert.match(chinese, /作为 Plugin 安装（推荐）/);
+  assert.match(chinese, /只安装独立 Skill/);
+  assert.match(chinese, /不要同时安装两份/);
+});
+
 test("English and Chinese READMEs provide reciprocal navigation and equivalent essentials", async () => {
   const [english, chinese] = await Promise.all([
     readFile(new URL("../README.md", import.meta.url), "utf8"),

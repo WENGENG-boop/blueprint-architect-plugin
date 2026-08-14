@@ -52,7 +52,11 @@ It does not implement the application, deploy it, publish secrets, or claim plan
 
 ## Install
 
-Requires a Codex version with plugin marketplace support.
+Blueprint Architect can be installed either as a complete Codex Plugin or as a standalone Skill. Choose one method; do not install both copies at the same time.
+
+### Option 1: install as a Plugin (recommended)
+
+This is the easiest option for most users and supports marketplace-managed discovery and updates. It requires a Codex version with plugin marketplace support.
 
 ```powershell
 codex plugin marketplace add WENGENG-boop/blueprint-architect-plugin
@@ -65,7 +69,25 @@ To refresh a previously added marketplace:
 codex plugin marketplace upgrade blueprint-architect
 ```
 
-Restart or open a new Codex task after installation so the Skill catalog is refreshed.
+### Option 2: install only the standalone Skill
+
+Choose this when you only want `$blueprint-architect` and do not want to register the plugin marketplace. The installer downloads the complete Skill directory, including its scripts, templates, compatibility rules, and GitHub reference-search support.
+
+Windows PowerShell:
+
+```powershell
+python "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo WENGENG-boop/blueprint-architect-plugin --path plugins/blueprint-architect-plugin/skills/blueprint-architect
+```
+
+macOS or Linux:
+
+```bash
+python3 "$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py" --repo WENGENG-boop/blueprint-architect-plugin --path plugins/blueprint-architect-plugin/skills/blueprint-architect
+```
+
+The standalone method installs to `$CODEX_HOME/skills/blueprint-architect` (normally `~/.codex/skills/blueprint-architect`). It does not add the marketplace or install a separate CLI/MCP server.
+
+After either installation method, restart Codex or open a new task so the Skill catalog is refreshed. Then invoke `$blueprint-architect` in Plan mode.
 
 ## Use
 
