@@ -8,7 +8,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --experimental-strip-types --test tests/resources.test.ts tests/interaction-contract.test.ts tests/generate-structure.test.ts tests/search-github.test.ts",
+    "test": "node --experimental-strip-types --test tests/resources.test.ts tests/interaction-contract.test.ts tests/generate-structure.test.ts tests/search-github.test.ts tests/readme-content.test.ts",
     "typecheck": "node --experimental-strip-types --check plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/generate-structure.ts && node --experimental-strip-types --check plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/search-github.ts",
     "validate:skill": "node scripts/validate-release.mjs skill",
     "validate:plugin": "node scripts/validate-release.mjs plugin",

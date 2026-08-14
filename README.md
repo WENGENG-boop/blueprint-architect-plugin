@@ -2,6 +2,42 @@
 
 Blueprint Architect turns a product idea or PRD into a reviewed project blueprint before implementation begins. It first explains the fundamental user problem, then guides only the material product and architecture decisions, checks compatibility, and generates files only after final confirmation.
 
+## Why Blueprint Architect comes before Superpowers
+
+Most development teams do not lose weeks because they cannot write code. They lose weeks because a vague PRD becomes implementation too early:
+
+- the team ships features before agreeing on the fundamental user problem;
+- frontend, backend, database, authentication, and deployment choices are made independently and conflict later;
+- stakeholders are asked broad technical questions without enough context to choose confidently;
+- coding agents work from different assumptions because no PRD-traceable blueprint exists;
+- disciplined execution produces the wrong product faster.
+
+[Superpowers](https://github.com/obra/superpowers) helps coding agents execute software work with discipline. **Blueprint Architect addresses the earlier and more expensive risk: building the wrong product or locking in an incompatible architecture before implementation starts.**
+
+| Critical developer question | Blueprint Architect advantage | Superpowers focus |
+|---|---|---|
+| Are we solving the right problem? | Starts from the PRD and identifies the fundamental user problem, constraints, unknowns, and non-goals before discussing technology. | Refines requested software work into a design as part of a broader development methodology. |
+| Will the stack work together? | Checks every confirmed technical decision against earlier choices and exposes conflicts before files are generated. | Focuses primarily on disciplined planning and implementation after a direction is established. |
+| Can stakeholders make confident choices? | Presents one material decision at a time through structured Plan-mode selectors, with a grounded recommendation and concise trade-offs. | Uses Socratic design refinement and workflow skills to govern the wider development process. |
+| What does implementation receive? | Produces a PRD-traceable decision record plus a confirmed directory and module blueprint. | Produces implementation plans and drives TDD, debugging, reviews, subagent execution, and branch completion. |
+| When should it be used? | **Use first** while requirements, scope, stack, or architecture still need to become explicit and compatible. | **Use next** when the team is ready to implement the confirmed direction systematically. |
+
+> **Recommended workflow:** use Blueprint Architect first to prevent requirement and architecture mistakes; then use Superpowers to plan, implement, test, review, and finish the confirmed blueprint.
+
+### Choose Blueprint Architect first when...
+
+- your input is still a product idea or PRD rather than an implementation-ready specification;
+- stakeholders need to understand the fundamental problem before technologies are selected;
+- technical decisions need to be explained and confirmed one at a time;
+- the team needs a compatibility-checked, PRD-traceable project blueprint before coding begins.
+
+Blueprint Architect and Superpowers are independent projects with complementary primary purposes; this comparison does not imply affiliation.
+
+> [!NOTE]
+> **Sponsor / Advertisement — [WeoAPI](https://sub.weo.asia)**
+>
+> WeoAPI describes its offering as a stable API relay service with occasional benefit campaigns. New registrations currently receive `$0.20` in account credit. Credit, availability, pricing, and campaign terms are provided by WeoAPI and may change; check the site for current details.
+
 ## What it changes
 
 - Interprets PRDs without forcing a generic questionnaire.
