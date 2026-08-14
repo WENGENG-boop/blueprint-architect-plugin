@@ -56,6 +56,18 @@ test("READMEs document both Plugin and standalone Skill installation", async () 
   assert.match(chinese, /不要同时安装两份/);
 });
 
+test("READMEs document selector use in Plan mode and prose fallback elsewhere", async () => {
+  const [english, chinese] = await Promise.all([
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(new URL("../README.zh-CN.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(english, /In Plan mode[\s\S]*structured selector/);
+  assert.match(english, /Outside Plan mode[\s\S]*numbered prose list/);
+  assert.match(chinese, /在 Plan 模式中[\s\S]*结构化选择器/);
+  assert.match(chinese, /未进入 Plan 模式或选择器不可用时[\s\S]*编号文字列表/);
+});
+
 test("English and Chinese READMEs provide reciprocal navigation and equivalent essentials", async () => {
   const [english, chinese] = await Promise.all([
     readFile(new URL("../README.md", import.meta.url), "utf8"),

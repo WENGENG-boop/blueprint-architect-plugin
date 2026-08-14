@@ -20,7 +20,7 @@ Most development teams do not lose weeks because they cannot write code. They lo
 |---|---|---|
 | Are we solving the right problem? | Starts from the PRD and identifies the fundamental user problem, constraints, unknowns, and non-goals before discussing technology. | Refines requested software work into a design as part of a broader development methodology. |
 | Will the stack work together? | Checks every confirmed technical decision against earlier choices and exposes conflicts before files are generated. | Focuses primarily on disciplined planning and implementation after a direction is established. |
-| Can stakeholders make confident choices? | Presents one material decision at a time through structured Plan-mode selectors, with a grounded recommendation and concise trade-offs. | Uses Socratic design refinement and workflow skills to govern the wider development process. |
+| Can stakeholders make confident choices? | Uses structured selectors in Plan mode and numbered prose choices otherwise. It presents one material decision at a time with a grounded recommendation and concise trade-offs. | Uses Socratic design refinement and workflow skills to govern the wider development process. |
 | What does implementation receive? | Produces a PRD-traceable decision record plus a confirmed directory and module blueprint. | Produces implementation plans and drives TDD, debugging, reviews, subagent execution, and branch completion. |
 | When should it be used? | **Use first** while requirements, scope, stack, or architecture still need to become explicit and compatible. | **Use next** when the team is ready to implement the confirmed direction systematically. |
 
@@ -43,7 +43,7 @@ Blueprint Architect and Superpowers are independent projects with complementary 
 ## What it changes
 
 - Interprets PRDs without forcing a generic questionnaire.
-- Uses Codex's structured selector for decisions instead of typed A/B/C replies.
+- Uses Codex's structured selector in Plan mode and numbered prose choices as a fallback elsewhere.
 - Checks confirmed technical choices against compatibility rules.
 - Produces a decision record, directory plan, module documentation, and implementation checklist.
 - Optionally searches public GitHub repositories when the user explicitly requests references.
@@ -87,17 +87,17 @@ python3 "$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-
 
 The standalone method installs to `$CODEX_HOME/skills/blueprint-architect` (normally `~/.codex/skills/blueprint-architect`). It does not add the marketplace or install a separate CLI/MCP server.
 
-After either installation method, restart Codex or open a new task so the Skill catalog is refreshed. Then invoke `$blueprint-architect` in Plan mode.
+After either installation method, restart Codex or open a new task so the Skill catalog is refreshed. Then invoke `$blueprint-architect`; Plan mode is recommended when you want clickable structured selectors.
 
 ## Use
 
-Enter Plan mode, attach or paste a PRD, and invoke:
+Attach or paste a PRD and invoke the Skill. Enter Plan mode first if you want clickable structured selectors:
 
 ```text
 $blueprint-architect Analyze this PRD and produce a project blueprint.
 ```
 
-Plan mode is required when the workflow reaches a decision because the Skill uses `request_user_input` to render a structured selector below the conversation. It will stop instead of falling back to prose choices when that selector is unavailable.
+In Plan mode, the Skill uses `request_user_input` to render a structured selector below the conversation. Outside Plan mode, or when the selector is unavailable, it continues with the same two or three choices as a numbered prose list and waits for the user to reply with the number or exact label.
 
 For interpretation only:
 
@@ -190,7 +190,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for pull-request expectations.
 
 ## Known limitations
 
-- Structured selector rendering requires Plan mode and a Codex client that exposes `request_user_input`.
+- Clickable structured selectors require Plan mode and a Codex client that exposes `request_user_input`; numbered prose choices remain available otherwise.
 - Compatibility rules are advisory; deployment-specific constraints still need verification against current provider documentation.
 - GitHub reference search is best-effort and unavailable offline.
 - This repository distributes a Codex Plugin, not an npm CLI, MCP server, or web application.

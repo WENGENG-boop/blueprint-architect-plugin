@@ -20,7 +20,7 @@ Blueprint Architect 把产品想法或 PRD 转化为经过审查的项目蓝图�
 |---|---|---|
 | 我们解决的是正确问题吗？ | 从 PRD 开始，在讨论技术之前识别最根本的用户问题、约束、未知项和明确不做的内容。 | 作为更完整开发方法论的一部分，把用户提出的软件工作逐步细化成设计。 |
 | 技术栈能够协同工作吗？ | 将每一个已确认的技术决策与此前选择进行兼容性检查，在生成文件之前暴露冲突。 | 主要关注方向确定之后的规范化计划与实现。 |
-| 利益相关者能够有把握地做决定吗？ | 通过 Plan 模式下的结构化选择器，每次只展示一个关键决策，并提供有依据的推荐和简洁权衡。 | 使用苏格拉底式设计澄清和工作流技能管理更完整的开发过程。 |
+| 利益相关者能够有把握地做决定吗？ | Plan 模式使用结构化选择器；非 Plan 模式使用编号文字选项。每次只展示一个关键决策，并提供有依据的推荐和简洁权衡。 | 使用苏格拉底式设计澄清和工作流技能管理更完整的开发过程。 |
 | 实现阶段会拿到什么？ | 生成可追溯到 PRD 的决策记录，以及经过确认的目录和模块蓝图。 | 生成实施计划，并推动 TDD、调试、评审、子 Agent 执行和分支收尾。 |
 | 应该在什么时候使用？ | 当需求、范围、技术栈或架构仍需明确并验证兼容性时，**先使用 Blueprint Architect**。 | 当团队已经准备好系统化实现确认后的方向时，**接着使用 Superpowers**。 |
 
@@ -43,7 +43,7 @@ Blueprint Architect 和 Superpowers 是两个相互独立的项目，各自解�
 ## 功能
 
 - 解读 PRD，而不是强制用户完成通用问卷；
-- 使用 Codex 的结构化选择器进行决策，而不是让用户输入 A/B/C；
+- Plan 模式使用 Codex 结构化选择器，其他情况下自动退回编号文字选项；
 - 根据兼容性规则检查已确认的技术选择；
 - 生成决策记录、目录规划、模块文档和实施检查清单；
 - 仅在用户明确要求实现参考时，可选搜索公开 GitHub 仓库。
@@ -87,17 +87,17 @@ python3 "$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-
 
 独立方式会安装到 `$CODEX_HOME/skills/blueprint-architect`，通常就是 `~/.codex/skills/blueprint-architect`。它不会添加插件市场，也不会安装额外的 CLI 或 MCP 服务。
 
-无论选择哪种方式，安装后都要重启 Codex 或创建一个新任务，以刷新 Skill 列表。之后进入 Plan 模式并调用 `$blueprint-architect`。
+无论选择哪种方式，安装后都要重启 Codex 或创建一个新任务，以刷新 Skill 列表。之后即可调用 `$blueprint-architect`；如果希望使用可点击的结构化选择器，建议先进入 Plan 模式。
 
 ## 使用
 
-进入 Plan 模式，附加或粘贴 PRD，然后调用：
+附加或粘贴 PRD 后即可调用；如果希望使用可点击的结构化选择器，请先进入 Plan 模式：
 
 ```text
 $blueprint-architect Analyze this PRD and produce a project blueprint.
 ```
 
-工作流进入决策阶段后必须使用 Plan 模式，因为该 Skill 会通过 `request_user_input` 在对话下方显示结构化选择器。如果选择器不可用，它会停止执行，而不会退回到文字选项。
+在 Plan 模式中，该 Skill 会通过 `request_user_input` 在对话下方显示结构化选择器。未进入 Plan 模式或选择器不可用时，它会继续执行，把相同的两到三个选项显示为编号文字列表，并等待用户回复选项编号或完整名称。
 
 如果只需要解读 PRD：
 
@@ -190,7 +190,7 @@ python "$env:USERPROFILE\.codex\skills\.system\plugin-creator\scripts\validate_p
 
 ## 已知限制
 
-- 结构化选择器需要 Plan 模式以及能够提供 `request_user_input` 的 Codex 客户端；
+- 可点击的结构化选择器需要 Plan 模式以及能够提供 `request_user_input` 的 Codex 客户端；其他情况下仍可使用编号文字选项；
 - 兼容性规则仅作为建议，具体部署限制仍需根据供应商最新文档进行核实；
 - GitHub 实现参考搜索是尽力而为的可选功能，离线时不可用；
 - 本仓库分发的是 Codex Plugin，不是 npm CLI、MCP 服务器或 Web 应用。

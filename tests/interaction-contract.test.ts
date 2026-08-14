@@ -17,19 +17,24 @@ async function proseFiles(directory: string): Promise<string[]> {
   return result;
 }
 
-test("skill mandates the structured selector for every decision path", async () => {
+test("skill prefers the selector and defines a numbered fallback for every decision path", async () => {
   const skill = await readFile(join(skillRoot, "SKILL.md"), "utf8");
-  for (const phrase of ["request_user_input", "exactly one question", "two or three mutually exclusive options", "(Recommended)", "compatibility correction", "final confirmation", "Enter `/plan`"]) {
+  for (const phrase of ["request_user_input", "one question at a time", "two or three mutually exclusive options", "(Recommended)", "compatibility correction", "final confirmation", "numbered prose list", "do not stop merely because the selector is unavailable"]) {
     assert.ok(skill.includes(phrase), `missing interaction phrase: ${phrase}`);
+  }
+
+  const agentPrompt = await readFile(join(skillRoot, "agents", "openai.yaml"), "utf8");
+  for (const phrase of ["Prefer request_user_input", "Outside Plan mode", "numbered prose list", "number or exact label"]) {
+    assert.ok(agentPrompt.includes(phrase), `agent prompt is missing fallback phrase: ${phrase}`);
   }
 });
 
-test("bundled material contains no stale typed-choice prompt", async () => {
+test("bundled material contains no stale stop-on-missing-selector rule", async () => {
   for (const file of await proseFiles(skillRoot)) {
     const content = await readFile(file, "utf8");
-    assert.doesNotMatch(content, /Your choice\s*:/i, file);
-    assert.doesNotMatch(content, /Proceed[^\n]*\(Y\/N\)/i, file);
-    assert.doesNotMatch(content, /Reply with (?:A|B|C)/i, file);
+    assert.doesNotMatch(content, /show no prose choices/i, file);
+    assert.doesNotMatch(content, /stop before asking or proceeding/i, file);
+    assert.doesNotMatch(content, /stop and direct me to \/plan/i, file);
   }
 });
 
