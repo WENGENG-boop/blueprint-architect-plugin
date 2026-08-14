@@ -102,7 +102,9 @@ PRD content stays in the active Codex workflow. GitHub lookup is optional and ru
 
 ## Configure GitHub reference search
 
-No setup is required for occasional use: public repository search works anonymously, subject to GitHub's stricter unauthenticated rate limits. For more reliable or frequent searches, configure a token in the environment. The plugin uses `GITHUB_TOKEN` first and falls back to `GH_TOKEN`; an explicit token supplied by code takes priority.
+> **Works out of the box:** users do not need to configure a GitHub token. Public repository search runs anonymously by default.
+
+Anonymous search is subject to GitHub's stricter unauthenticated rate limits. A token is optional and is useful only for more reliable or frequent searches, or after anonymous requests are rate limited. When configured, the plugin uses `GITHUB_TOKEN` first and falls back to `GH_TOKEN`; an explicit token supplied by code takes priority.
 
 Use a fine-grained personal access token with only the minimum read-only repository metadata access needed for public search. Review GitHub's official [fine-grained token permissions](https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens) and [REST API rate limits](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api). Never commit a token, paste it into a PRD or chat, store it in plugin files, or pass it with a command-line argument.
 

@@ -21,6 +21,19 @@ test("README leads with the product advantage and disclosed sponsor", async () =
   assert.match(readme, /may change/i);
 });
 
+test("READMEs state that anonymous GitHub search needs no token", async () => {
+  const [english, chinese] = await Promise.all([
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(new URL("../README.zh-CN.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(english, /users do not need to configure a GitHub token/i);
+  assert.match(english, /runs anonymously by default/i);
+  assert.match(chinese, /用户不需要配置 GitHub Token/);
+  assert.match(chinese, /默认以匿名方式运行/);
+  assert.match(chinese, /Token 完全可选/);
+});
+
 test("English and Chinese READMEs provide reciprocal navigation and equivalent essentials", async () => {
   const [english, chinese] = await Promise.all([
     readFile(new URL("../README.md", import.meta.url), "utf8"),

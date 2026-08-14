@@ -102,7 +102,9 @@ PRD 内容保留在当前 Codex 工作流内。GitHub 查询是可选功能，�
 
 ## 配置 GitHub 参考搜索
 
-偶尔使用不需要任何配置：公开仓库搜索可以匿名运行，但会受到 GitHub 更严格的未认证速率限制。需要更稳定或更频繁地搜索时，请通过环境变量配置 Token。插件优先读取 `GITHUB_TOKEN`，没有时再读取 `GH_TOKEN`；代码显式传入的 Token 优先级最高。
+> **默认开箱即用：用户不需要配置 GitHub Token。公开仓库搜索默认以匿名方式运行。**
+
+匿名搜索会受到 GitHub 更严格的未认证速率限制。Token 完全可选，仅在需要更稳定、更频繁地搜索，或者匿名请求遇到限流时才需要配置。配置后，插件优先读取 `GITHUB_TOKEN`，没有时再读取 `GH_TOKEN`；代码显式传入的 Token 优先级最高。
 
 建议创建细粒度个人访问令牌，只授予公开搜索所需的最小只读仓库元数据权限。请参考 GitHub 官方的[细粒度令牌权限说明](https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens)和 [REST API 速率限制说明](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api)。不要把 Token 提交到仓库、粘贴进 PRD 或聊天、存进插件文件，也不要作为命令行参数传递。
 
