@@ -71,15 +71,15 @@ test("READMEs document selector use in Plan mode and prose fallback elsewhere", 
   assert.match(chinese, /未进入 Plan 模式或选择器不可用时[\s\S]*编号文字列表/);
 });
 
-test("READMEs do not describe the legacy generator as fully dynamic", async () => {
+test("READMEs document the implemented universal compatibility engine", async () => {
   const [english, chinese] = await Promise.all([
     readFile(new URL("../README.md", import.meta.url), "utf8"),
     readFile(new URL("../README.zh-CN.md", import.meta.url), "utf8"),
   ]);
-  assert.match(english, /current generator creates a fixed starter scaffold/i);
-  assert.match(english, /compatibility rules are advisory and intentionally limited/i);
-  assert.match(chinese, /当前生成器创建的是固定起步结构/);
-  assert.match(chinese, /兼容性规则属于有限的辅助检查/);
+  for (const phrase of ["BlueprintSpec", "verified_compatible", "conditional", "conflict", "insufficient_input", "unverified", "primary evidence", "PRD-derived module tree", "legacy generator arguments"]) assert.ok(english.includes(phrase), `English README missing universal-engine phrase: ${phrase}`);
+  for (const phrase of ["BlueprintSpec", "verified_compatible", "conditional", "conflict", "insufficient_input", "unverified", "主要证据", "真实模块树", "旧版生成器参数"]) assert.ok(chinese.includes(phrase), `Chinese README missing universal-engine phrase: ${phrase}`);
+  assert.doesNotMatch(english, /current generator creates a fixed starter scaffold/i);
+  assert.doesNotMatch(chinese, /当前生成器创建的是固定起步结构/);
 });
 
 test("English and Chinese READMEs provide reciprocal navigation and equivalent essentials", async () => {

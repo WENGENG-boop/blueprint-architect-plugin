@@ -1,6 +1,6 @@
 {
   "name": "blueprint-architect-plugin-repository",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Development and validation tooling for the Blueprint Architect Codex Plugin.",
   "type": "module",

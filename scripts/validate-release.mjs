@@ -30,7 +30,7 @@ async function validatePlugin() {
   if (marketplace.name !== "blueprint-architect") throw new Error("Marketplace name is invalid");
   const entry = marketplace.plugins?.find((plugin) => plugin.name === "blueprint-architect-plugin");
   if (!entry || entry.source?.path !== "./plugins/blueprint-architect-plugin") throw new Error("Marketplace plugin source is invalid");
-  if (manifest.name !== "blueprint-architect-plugin" || manifest.version !== "0.1.0") throw new Error("Plugin manifest identity is invalid");
+  if (manifest.name !== "blueprint-architect-plugin" || manifest.version !== "0.2.0") throw new Error("Plugin manifest identity is invalid");
   if (manifest.skills !== "./skills/") throw new Error("Plugin skill path is invalid");
   process.stdout.write("Plugin release validation passed.\n");
 }
