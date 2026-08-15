@@ -26,3 +26,15 @@ test("module types are valid structured YAML", async () => {
   assert.ok(value.module_types.some((module: { id: string }) => module.id === "application"));
   for (const module of value.module_types) assert.ok(Array.isArray(module.required_sections));
 });
+
+test("capability rules are valid structured YAML", async () => {
+  const value = JSON.parse(await readFile(join(references, "capability-rules.yaml"), "utf8"));
+  assert.equal(value.version, 1);
+  assert.ok(value.rules.length >= 6);
+  for (const rule of value.rules) {
+    assert.ok(Array.isArray(rule.all));
+    assert.ok(Array.isArray(rule.any));
+    assert.ok(["conditional", "conflict", "insufficient_input", "unverified"].includes(rule.result.status));
+    assert.ok(Array.isArray(rule.result.corrections));
+  }
+});

@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "ephemeral-runtime-persistent-connections",
+      "severity": "warning",
+      "all": [
+        { "selector": "deployment", "capability": "instance-lifecycle", "operator": "equals", "value": "ephemeral" },
+        { "selector": "technology:database-client", "capability": "connection-lifecycle", "operator": "equals", "value": "persistent" }
+      ],
+      "any": [],
+      "result": {
+        "status": "conditional",
+        "issue": "A persistent database client runs on ephemeral, independently scaling instances.",
+        "impact": "Unbounded clients can exhaust database connection limits during scale-out.",
+        "corrections": [
+          { "id": "bounded-pooling", "kind": "configuration", "description": "Use a serverless-safe pooled endpoint and explicit per-instance connection bounds." },
+          { "id": "connection-proxy", "kind": "adapter", "description": "Place a compatible connection proxy between ephemeral instances and the database." }
+        ]
+      }
+    },
+    {
+      "id": "client-only-rendering-seo",
+      "severity": "warning",
+      "all": [
+        { "selector": "technology:web-framework", "capability": "rendering", "operator": "includes", "value": "client-only" },
+        { "selector": "requirement", "capability": "seo", "operator": "equals", "value": "critical" }
+      ],
+      "any": [],
+      "result": {
+        "status": "conflict",
+        "issue": "Critical indexable content relies on client-only rendering.",
+        "impact": "Crawlers and link previews may not receive reliable initial content.",
+        "corrections": [
+          { "id": "server-render-public-content", "kind": "configuration", "description": "Render critical public content on the server or at build time." },
+          { "id": "isolate-marketing-site", "kind": "isolation", "description": "Serve acquisition content from a separately rendered public application." }
+        ]
+      }
+    },
+    {
+      "id": "static-delivery-realtime-channel",
+      "severity": "info",
+      "all": [
+        { "selector": "deployment", "capability": "delivery", "operator": "equals", "value": "static" },
+        { "selector": "requirement", "capability": "realtime", "operator": "equals", "value": true }
+      ],
+      "any": [],
+      "result": {
+        "status": "conditional",
+        "issue": "Static delivery has no server-side realtime channel by itself.",
+        "impact": "Realtime features need an explicit authenticated client channel and service owner.",
+        "corrections": [
+          { "id": "managed-realtime-adapter", "kind": "adapter", "description": "Add an authenticated managed realtime service." },
+          { "id": "isolate-realtime-runtime", "kind": "isolation", "description": "Host realtime areas in a separate dynamic runtime." }
+        ]
+      }
+    },
+    {
+      "id": "process-memory-multi-instance",
+      "severity": "error",
+      "all": [
+        { "selector": "technology:session-store", "capability": "state-location", "operator": "equals", "value": "process-memory" },
+        { "selector": "deployment", "capability": "scale", "operator": "equals", "value": "multi-instance" }
+      ],
+      "any": [],
+      "result": {
+        "status": "conflict",
+        "issue": "Process-local session state is not shared across instances.",
+        "impact": "Requests routed to another instance can lose or contradict session state.",
+        "corrections": [
+          { "id": "shared-session-store", "kind": "adapter", "description": "Move session state to a shared database or cache." },
+          { "id": "stateless-session", "kind": "replacement", "description": "Use protected stateless sessions when revocation requirements permit." }
+        ]
+      }
+    },
+    {
+      "id": "esm-runtime-commonjs-only-package",
+      "severity": "warning",
+      "all": [
+        { "selector": "technology:runtime", "capability": "module-system", "operator": "equals", "value": "esm" },
+        { "selector": "technology:library", "capability": "module-system", "operator": "equals", "value": "commonjs-only" }
+      ],
+      "any": [],
+      "result": {
+        "status": "conditional",
+        "issue": "An ESM runtime consumes a CommonJS-only package.",
+        "impact": "Bundling, default imports, or edge execution can fail without interop handling.",
+        "corrections": [
+          { "id": "configure-module-interop", "kind": "configuration", "description": "Configure and test explicit ESM/CommonJS interoperability." },
+          { "id": "replace-module-format", "kind": "replacement", "description": "Select an equivalent package with native ESM support." }
+        ]
+      }
+    },
+    {
+      "id": "streaming-protocol-mismatch",
+      "severity": "error",
+      "all": [
+        { "selector": "technology:ai-sdk", "capability": "streaming-protocol", "operator": "equals", "value": "data-stream" },
+        { "selector": "interface:stream", "capability": "streaming-protocol", "operator": "not_equals", "value": "data-stream" }
+      ],
+      "any": [],
+      "result": {
+        "status": "conflict",
+        "issue": "The AI SDK and public stream interface use different event protocols.",
+        "impact": "Clients cannot reliably parse deltas, errors, and tool events.",
+        "corrections": [
+          { "id": "stream-protocol-adapter", "kind": "adapter", "description": "Translate provider events into the versioned public stream protocol." }
+        ]
+      }
+    }
+  ]
+}
