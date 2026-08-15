@@ -6,7 +6,8 @@ import type {
   FindingStatus,
   TechnologyDefinition,
 } from "./blueprint-types.ts";
-import { evaluateCapabilityRules, type CapabilityContext, type CapabilityEntity, type CapabilityRuleSet, type RuleFinding } from "./capability-engine.ts";
+import { evaluateCapabilityRules, parseCapabilityRules, type CapabilityContext, type CapabilityEntity, type CapabilityRuleSet, type RuleFinding } from "./capability-engine.ts";
+import { validateBlueprintSpec } from "./validate-blueprint.ts";
 
 export interface CompatibilityEdge {
   id: string;
@@ -191,4 +192,11 @@ export function evaluateCompatibility(spec: BlueprintSpec, ruleSet: CapabilityRu
   const findingsByEdge = new Map(finalFindings.map((finding) => [finding.edgeId, finding]));
   const uncoveredEdges = edges.filter((edge) => !findingsByEdge.has(edge.id)).map((edge) => edge.id);
   return { edges, findings: finalFindings, findingsByEdge, uncoveredEdges };
+}
+
+export function analyzeBlueprint(input: unknown, ruleText: string): { spec: BlueprintSpec; report: CompatibilityReport } {
+  const initial = validateBlueprintSpec(input);
+  const report = evaluateCompatibility(initial, parseCapabilityRules(ruleText));
+  const spec = validateBlueprintSpec({ ...initial, findings: report.findings });
+  return { spec, report };
 }
