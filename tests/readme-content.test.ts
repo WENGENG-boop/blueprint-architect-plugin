@@ -71,6 +71,17 @@ test("READMEs document selector use in Plan mode and prose fallback elsewhere", 
   assert.match(chinese, /未进入 Plan 模式或选择器不可用时[\s\S]*编号文字列表/);
 });
 
+test("READMEs do not describe the legacy generator as fully dynamic", async () => {
+  const [english, chinese] = await Promise.all([
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(new URL("../README.zh-CN.md", import.meta.url), "utf8"),
+  ]);
+  assert.match(english, /current generator creates a fixed starter scaffold/i);
+  assert.match(english, /compatibility rules are advisory and intentionally limited/i);
+  assert.match(chinese, /当前生成器创建的是固定起步结构/);
+  assert.match(chinese, /兼容性规则属于有限的辅助检查/);
+});
+
 test("English and Chinese READMEs provide reciprocal navigation and equivalent essentials", async () => {
   const [english, chinese] = await Promise.all([
     readFile(new URL("../README.md", import.meta.url), "utf8"),

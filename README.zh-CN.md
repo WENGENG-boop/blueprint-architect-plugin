@@ -115,6 +115,8 @@ $blueprint-architect Explain the fundamental product problem in this PRD and lis
 
 ## 生成内容
 
+> **当前实现边界：**当前生成器创建的是固定起步结构（`app`、`components`、`lib`、`public`、`tests` 和 `types`）以及通用模块 README，并未根据任意 PRD 动态推导完整模块树或具体接口契约。兼容性规则属于有限的辅助检查，不会验证真实 Prisma schema、部署配置、SDK 版本或数据库连接。
+
 用户确认创建文件后，内置生成器可以非破坏性地创建项目蓝图，其中包括：
 
 - 根项目说明和已确认的技术选择；

@@ -115,6 +115,8 @@ The personal `/prompts:blueprint` shortcut is not bundled. `$blueprint-architect
 
 ## Generated output
 
+> **Current implementation boundary:** the current generator creates a fixed starter scaffold (`app`, `components`, `lib`, `public`, `tests`, and `types`) with generic module README files. It does not yet derive a complete module tree or concrete interface contracts from arbitrary PRD content. Compatibility rules are advisory and intentionally limited; they do not validate a live Prisma schema, deployment configuration, SDK version, or database connection.
+
 When the user confirms file creation, the bundled generator can create a non-destructive project blueprint containing:
 
 - root project summary and confirmed technology choices;
