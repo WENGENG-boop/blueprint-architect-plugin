@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, realpath, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -29,7 +29,7 @@ test("generator creates deterministic declared output and refuses overwrite", as
   try {
     const spec = validateBlueprintSpec(await fixture());
     const result = await generateBlueprint(spec, output);
-    assert.equal(result.targetDir, join(output, "ai-support-saas"));
+    assert.equal(result.targetDir, join(await realpath(output), "ai-support-saas"));
     assert.deepEqual(result.manifest, [...result.manifest].sort());
     assert.ok(result.manifest.includes("src/ai-orchestration/README.md"));
     assert.ok(result.manifest.includes("interfaces/if-chat.md"));
