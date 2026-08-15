@@ -27,6 +27,7 @@ export interface RequirementDefinition {
   title: string;
   description: string;
   acceptanceCriteria: string[];
+  capabilities: Capabilities;
 }
 
 export interface TechnologyDefinition {
@@ -91,6 +92,7 @@ export interface InterfaceDefinition {
   idempotency: string;
   versioning: string;
   requirementIds: string[];
+  capabilities: Capabilities;
 }
 
 export interface DataFlowDefinition {

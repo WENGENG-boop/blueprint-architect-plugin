@@ -5,7 +5,7 @@ const ID = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
 const PATH_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i;
 const SECRET_FIELD = /^(token|password|secret|private[_-]?key|api[_-]?key)$/i;
-const PRIMARY_EVIDENCE = new Set(["official_docs", "official_repository", "package_metadata", "local_rule"]);
+const PRIMARY_EVIDENCE = new Set(["official_docs", "official_repository", "package_metadata"]);
 
 export class BlueprintValidationError extends Error {
   readonly issues: string[];
@@ -149,6 +149,7 @@ export function validateBlueprintSpec(input: unknown): BlueprintSpec {
     requiredString(value.title, `requirements[${index}].title`, issues);
     requiredString(value.description, `requirements[${index}].description`, issues);
     validateStringList(value.acceptanceCriteria, `requirements[${index}].acceptanceCriteria`, issues, false);
+    if (!record(value.capabilities)) issues.push(`requirements[${index}].capabilities must be an object`);
   });
 
   if (Array.isArray(root.technologies)) root.technologies.forEach((item, index) => {
@@ -194,6 +195,7 @@ export function validateBlueprintSpec(input: unknown): BlueprintSpec {
     validateReferences(value.consumerModuleIds, moduleIds, `interfaces[${index}].consumerModuleIds`, "module", issues);
     validateReferences(value.requirementIds, requirementIds, `interfaces[${index}].requirementIds`, "requirement", issues);
     for (const field of ["name", "transport", "request", "response", "authentication", "idempotency", "versioning"] as const) requiredString(value[field], `interfaces[${index}].${field}`, issues);
+    if (!record(value.capabilities)) issues.push(`interfaces[${index}].capabilities must be an object`);
   });
 
   const nodeIds = new Set([...technologyIds, ...deploymentIds, ...moduleIds, ...interfaceIds]);

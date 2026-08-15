@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "project": { "id": "novel-service", "name": "Novel Service", "description": "A service using an unfamiliar runtime.", "problem": "Evaluate a provisional technology safely.", "goals": ["Produce an evidence gap"], "nonGoals": ["Invent vendor support"], "assumptions": [], "constraints": ["Unknown runtime must not crash analysis"] },
+  "requirements": [{ "id": "req-api", "title": "Expose API", "description": "Serve a versioned request API.", "acceptanceCriteria": ["Requests receive versioned responses"], "capabilities": { "api": true } }],
+  "technologies": [{ "id": "tech-novel", "name": "NovaRuntime", "category": "runtime", "version": "preview-3", "deploymentIds": ["deploy-novel"], "dependencyIds": [], "capabilities": { "execution-model": "provisional", "version-sensitive": true }, "source": "provisional", "confidence": "low" }],
+  "deployments": [{ "id": "deploy-novel", "name": "Novel Cloud", "type": "managed", "technologyIds": ["tech-novel"], "capabilities": { "scale": "unknown" }, "constraints": ["No authoritative compatibility source supplied"] }],
+  "modules": [{ "id": "mod-api", "name": "Public API", "path": "service/api", "responsibilities": ["Handle versioned requests"], "ownedData": [], "technologyIds": ["tech-novel"], "requirementIds": ["req-api"], "dependencyIds": [], "interfaceIds": ["if-api"], "dataFlowIds": [], "failureModes": ["Runtime behavior differs from provisional capability declaration"], "security": ["Authenticate requests"], "privacy": ["Do not log request secrets"], "configuration": ["SERVICE_ORIGIN"], "tests": [{ "id": "test-api-contract", "kind": "contract", "description": "Verify versioned response envelope", "requirementIds": ["req-api"] }] }],
+  "interfaces": [{ "id": "if-api", "name": "Versioned API", "moduleId": "mod-api", "consumerModuleIds": [], "transport": "HTTP", "method": "POST", "path": "/v1/request", "request": "Versioned JSON request", "response": "Versioned JSON response", "errors": ["UnsupportedVersion"], "authentication": "Bearer credential reference", "idempotency": "Request ID", "versioning": "Path version", "requirementIds": ["req-api"], "capabilities": { "protocol": "http" } }],
+  "dataFlows": [],
+  "evidence": [],
+  "findings": [],
+  "unresolved": [{ "id": "unresolved-runtime-evidence", "description": "Authoritative runtime and deployment compatibility evidence is missing.", "affectedIds": ["tech-novel", "deploy-novel"], "requiredFrom": "Technology owner" }]
+}
