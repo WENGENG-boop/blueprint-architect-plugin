@@ -3,12 +3,15 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { generateProjectStructure, resolveProjectTarget, validateProjectName } from "../plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/generate-structure.ts";
+import { generateBlueprint, resolveProjectTarget, validateProjectName } from "../plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/generate-structure.ts";
+import { validateBlueprintSpec } from "../plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/validate-blueprint.ts";
+
+async function fixture(): Promise<any> {
+  return JSON.parse(await readFile(new URL("./fixtures/blueprints/nextjs-ai-saas.json", import.meta.url), "utf8"));
+}
 
 test("project-name validation rejects traversal and platform-specific paths", () => {
-  for (const name of ["", ".", "..", "../escape", "a/b", "a\\b", "C:\\escape", "UpperCase", "double--dash"]) {
-    assert.throws(() => validateProjectName(name), /lowercase letters/);
-  }
+  for (const name of ["", ".", "..", "../escape", "a/b", "a\\b", "C:\\escape", "UpperCase", "double--dash"]) assert.throws(() => validateProjectName(name), /lowercase letters/);
   assert.equal(validateProjectName("safe-project-2"), "safe-project-2");
 });
 
@@ -21,20 +24,19 @@ test("resolved target is a direct output child", async () => {
   }
 });
 
-test("generator creates truthful deterministic output and refuses overwrite", async () => {
+test("generator creates deterministic declared output and refuses overwrite", async () => {
   const output = await mkdtemp(join(tmpdir(), "blueprint-generate-"));
   try {
-    const config = { name: "safe-project", description: "A confirmed project blueprint.", techStack: { frontend: "nextjs", database: "postgresql" }, outputDir: output };
-    const result = await generateProjectStructure(config);
-    assert.equal(result.targetDir, join(output, "safe-project"));
+    const spec = validateBlueprintSpec(await fixture());
+    const result = await generateBlueprint(spec, output);
+    assert.equal(result.targetDir, join(output, "ai-support-saas"));
     assert.deepEqual(result.manifest, [...result.manifest].sort());
-    assert.ok(result.manifest.includes("README.md"));
-    assert.ok(result.manifest.includes("package.json"));
-    const packageJson = JSON.parse(await readFile(join(result.targetDir, "package.json"), "utf8"));
-    assert.equal(packageJson.name, "safe-project");
+    assert.ok(result.manifest.includes("src/ai-orchestration/README.md"));
+    assert.ok(result.manifest.includes("interfaces/if-chat.md"));
+    assert.ok(result.manifest.includes("blueprint.spec.json"));
     const readme = await readFile(join(result.targetDir, "README.md"), "utf8");
     assert.doesNotMatch(readme, /All tests pass|Deployed to|✅/);
-    await assert.rejects(generateProjectStructure(config), /Target already exists/);
+    await assert.rejects(generateBlueprint(spec, output), /Target already exists/);
   } finally {
     await rm(output, { recursive: true, force: true });
   }

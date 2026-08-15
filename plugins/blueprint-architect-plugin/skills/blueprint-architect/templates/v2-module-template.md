@@ -10,6 +10,8 @@
 
 {{INTERFACES}}
 
+Every declared public boundary must name its owner, consumers, transport, request, response, errors, authentication, idempotency, and versioning policy.
+
 ## Data flow
 
 {{DATA_FLOW}}
@@ -34,6 +36,8 @@
 - [ ] Add deterministic tests for confirmed acceptance criteria.
 - [ ] Run the documented checks and record their results.
 
-## Deferred inputs
+## Unresolved inputs
 
-Use `TODO(owner/input): explanation` only when a required decision or external value is genuinely unavailable.
+{{UNRESOLVED_INPUTS}}
+
+List only genuinely missing decisions or external facts. Do not replace confirmed responsibilities or contracts with generic placeholder instructions.
