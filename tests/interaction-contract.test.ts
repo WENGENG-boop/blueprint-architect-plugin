@@ -51,3 +51,28 @@ test("skill defines a safe and executable GitHub lookup contract", async () => {
     assert.ok(skill.includes(phrase), `missing GitHub lookup contract: ${phrase}`);
   }
 });
+
+test("skill defines the universal evidence-aware blueprint workflow", async () => {
+  const [skill, agentPrompt] = await Promise.all([
+    readFile(join(skillRoot, "SKILL.md"), "utf8"),
+    readFile(join(skillRoot, "agents", "openai.yaml"), "utf8"),
+  ]);
+  for (const phrase of [
+    "BlueprintSpec",
+    "capability-rules.yaml",
+    "evidence-policy.md",
+    "verified_compatible",
+    "conditional",
+    "conflict",
+    "insufficient_input",
+    "unverified",
+    "No rule match is not evidence of compatibility",
+    "after every material technical decision",
+    "PRD-derived modules",
+    "Unknown technologies are allowed",
+  ]) assert.ok(skill.includes(phrase), `missing universal workflow phrase: ${phrase}`);
+  for (const phrase of ["BlueprintSpec", "every declared edge", "no rule match is never proof of compatibility", "primary evidence", "numbered prose list"]) {
+    assert.ok(agentPrompt.includes(phrase), `agent prompt missing universal workflow phrase: ${phrase}`);
+  }
+  assert.ok(!skill.includes("compatibility-matrix.yaml"));
+});

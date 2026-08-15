@@ -18,7 +18,7 @@ async function validateSkill() {
   const keys = [...frontmatter[1].matchAll(/^([a-z_]+):/gm)].map((match) => match[1]);
   if (keys.join(",") !== "name,description") throw new Error("Skill frontmatter must contain only name and description");
   if (!frontmatter[1].includes("name: blueprint-architect")) throw new Error("Skill name is invalid");
-  for (const file of ["references/analyze-prd.md", "references/compatibility-matrix.yaml", "references/module-types.yaml", "templates/v2-module-template.md"]) {
+  for (const file of ["references/analyze-prd.md", "references/capability-rules.yaml", "references/evidence-policy.md", "references/module-types.yaml", "templates/v2-module-template.md", "scripts/blueprint-types.ts", "scripts/validate-blueprint.ts", "scripts/capability-engine.ts", "scripts/compatibility-graph.ts", "scripts/generate-structure.ts"]) {
     await readFile(resolve(skillRoot, file));
   }
   process.stdout.write("Skill release validation passed.\n");

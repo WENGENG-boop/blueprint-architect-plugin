@@ -1,7 +1,7 @@
 interface:
   display_name: "Blueprint Architect"
   short_description: "Interpret PRDs and plan compatible project blueprints"
-  default_prompt: "Use $blueprint-architect to analyze this PRD, explain its fundamental product problem, and guide material decisions. Prefer request_user_input for every decision, compatibility correction, and final confirmation when available: one question at a time, 2-3 mutually exclusive options, recommendation first ending in '(Recommended)', and one concise trade-off per option. In Plan mode use the structured selector. Outside Plan mode, or if the selector is unavailable, continue with the same options as a numbered prose list and ask me to reply with the number or exact label."
+  default_prompt: "Use $blueprint-architect to analyze this PRD, explain its fundamental product problem, and build a version-1 BlueprintSpec with stable requirement IDs, confirmed or provisional technology versions and capabilities, PRD-derived modules, interfaces, data flows, deployments, tests, and traceability. Evaluate every declared edge with capability-rules.yaml and evidence-policy.md after each material decision and before generation. Use only verified_compatible, conditional, conflict, insufficient_input, or unverified; no rule match is never proof of compatibility, and version-sensitive verified claims require primary evidence. Prefer request_user_input for decisions when available. Outside Plan mode use the same 2-3 options as a numbered prose list and ask for the number or exact label. Generate the declared tree only after final confirmation."
 
 policy:
   allow_implicit_invocation: true

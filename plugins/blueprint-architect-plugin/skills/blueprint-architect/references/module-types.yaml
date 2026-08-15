@@ -1,35 +1,12 @@
 {
-  "version": 1,
-  "module_types": [
-    {
-      "id": "application",
-      "purpose": "User-facing routes, layouts, and request entry points.",
-      "default_directories": ["app"],
-      "required_sections": ["responsibilities", "interfaces", "data-flow", "edge-cases", "checklist"]
-    },
-    {
-      "id": "components",
-      "purpose": "Reusable presentation and interaction components.",
-      "default_directories": ["components"],
-      "required_sections": ["responsibilities", "interfaces", "accessibility", "dependencies", "checklist"]
-    },
-    {
-      "id": "domain",
-      "purpose": "Business rules and use-case orchestration independent of delivery frameworks.",
-      "default_directories": ["lib"],
-      "required_sections": ["responsibilities", "interfaces", "invariants", "errors", "checklist"]
-    },
-    {
-      "id": "infrastructure",
-      "purpose": "External services, persistence, authentication, messaging, and deployment adapters.",
-      "default_directories": ["lib/integrations"],
-      "required_sections": ["responsibilities", "configuration", "failure-modes", "security", "checklist"]
-    },
-    {
-      "id": "tests",
-      "purpose": "Deterministic unit and integration verification.",
-      "default_directories": ["tests/unit", "tests/integration"],
-      "required_sections": ["scope", "fixtures", "boundaries", "commands", "checklist"]
-    }
+  "version": 2,
+  "module_roles": [
+    { "id": "entrypoint", "purpose": "Own a delivery or request entry boundary selected for the project.", "required_sections": ["responsibilities", "interfaces", "data-flow", "failure-modes", "security", "tests"] },
+    { "id": "domain", "purpose": "Own business invariants and use-case orchestration independent of delivery technology.", "required_sections": ["responsibilities", "owned-data", "interfaces", "invariants", "failure-modes", "tests"] },
+    { "id": "adapter", "purpose": "Translate between a domain boundary and an external service or protocol.", "required_sections": ["responsibilities", "interfaces", "dependencies", "configuration", "failure-modes", "security", "tests"] },
+    { "id": "persistence", "purpose": "Own schema, migration, transaction, and persistence mapping responsibilities.", "required_sections": ["responsibilities", "owned-data", "interfaces", "transactions", "failure-modes", "security", "tests"] },
+    { "id": "background-worker", "purpose": "Own asynchronous jobs, retries, idempotency, and dead-letter behavior.", "required_sections": ["responsibilities", "interfaces", "data-flow", "idempotency", "failure-modes", "observability", "tests"] },
+    { "id": "interface", "purpose": "Own a versioned public or internal contract and its compatibility policy.", "required_sections": ["owner", "consumers", "transport", "request", "response", "errors", "authentication", "idempotency", "versioning"] },
+    { "id": "test-support", "purpose": "Own deterministic fixtures, harnesses, and boundary verification required by the specification.", "required_sections": ["scope", "fixtures", "boundaries", "commands", "failure-diagnostics"] }
   ]
 }
