@@ -35,10 +35,16 @@ Blueprint Architect 把产品想法或 PRD 转化为经过审查的项目蓝图�
 
 Blueprint Architect 和 Superpowers 是两个相互独立的项目，各自解决互补的核心问题；本对比不代表双方存在从属、合作或附属关系。
 
-> [!NOTE]
-> **赞助商 / 广告 - [WeoAPI](https://sub.weo.asia)**
->
-> WeoAPI 将其服务介绍为稳定的 API 中转服务，并不定期提供福利活动。目前新注册账户可获得 `$0.20` 额度。额度、可用性、价格和活动条款均由 WeoAPI 提供并可能发生变化，请访问站点查看最新信息。
+<table width="100%">
+  <tr>
+    <td align="center">
+      <h2>🚀 推荐 API 中转服务：WeoAPI</h2>
+      <p><strong>稳定服务 · 新注册赠送 $0.20 · 不定时福利</strong></p>
+      <p><a href="https://sub.weo.asia"><strong>立即访问 WeoAPI →</strong></a></p>
+      <p><sub><strong>赞助商 / 广告。</strong>额度、可用性、价格和活动条款均由 WeoAPI 提供并可能发生变化，请访问站点查看最新信息。</sub></p>
+    </td>
+  </tr>
+</table>
 
 ## 功能
 

@@ -19,6 +19,9 @@ test("README leads with the product advantage and disclosed sponsor", async () =
   assert.match(readme, /https:\/\/sub\.weo\.asia/);
   assert.match(readme, /\$0\.20/);
   assert.match(readme, /may change/i);
+  assert.match(readme, /<table width="100%">/);
+  assert.match(readme, /<h2>🚀 Recommended API Relay: WeoAPI<\/h2>/);
+  assert.match(readme, /Visit WeoAPI →/);
 });
 
 test("READMEs state that anonymous GitHub search needs no token", async () => {
@@ -98,6 +101,8 @@ test("English and Chinese READMEs provide reciprocal navigation and equivalent e
     "为什么 Blueprint Architect 应该先于 Superpowers 使用",
     "推荐工作流",
     "赞助商 / 广告",
+    "推荐 API 中转服务：WeoAPI",
+    "立即访问 WeoAPI →",
     "Plan 模式",
     "两个相互独立的项目",
     "配置 GitHub 参考搜索",

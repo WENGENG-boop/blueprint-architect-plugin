@@ -35,10 +35,16 @@ Most development teams do not lose weeks because they cannot write code. They lo
 
 Blueprint Architect and Superpowers are independent projects with complementary primary purposes; this comparison does not imply affiliation.
 
-> [!NOTE]
-> **Sponsor / Advertisement — [WeoAPI](https://sub.weo.asia)**
->
-> WeoAPI describes its offering as a stable API relay service with occasional benefit campaigns. New registrations currently receive `$0.20` in account credit. Credit, availability, pricing, and campaign terms are provided by WeoAPI and may change; check the site for current details.
+<table width="100%">
+  <tr>
+    <td align="center">
+      <h2>🚀 Recommended API Relay: WeoAPI</h2>
+      <p><strong>Stable service · $0.20 credit for new registrations · Occasional benefit campaigns</strong></p>
+      <p><a href="https://sub.weo.asia"><strong>Visit WeoAPI →</strong></a></p>
+      <p><sub><strong>Sponsor / Advertisement.</strong> Credit, availability, pricing, and campaign terms are provided by WeoAPI and may change. Check the site for current details.</sub></p>
+    </td>
+  </tr>
+</table>
 
 ## What it changes
 
