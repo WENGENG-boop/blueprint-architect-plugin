@@ -24,5 +24,6 @@
   "dataFlows": [{ "id": "flow-presence", "name": "Presence propagation", "fromId": "mod-gateway", "toId": "mod-coordinator", "description": "Authorized presence changes persist and fan out to all gateway instances.", "data": ["Tenant ID", "Session ID", "Presence state", "Event version"], "requirementIds": ["req-presence", "req-resilience"] }],
   "evidence": [],
   "findings": [],
-  "unresolved": [{ "id": "unresolved-websocket-version", "description": "Select and verify the concrete WebSocket library version.", "affectedIds": ["tech-websocket"], "requiredFrom": "Architecture owner" }]
+  "unresolved": [{ "id": "unresolved-websocket-version", "description": "Select and verify the concrete WebSocket library version.", "affectedIds": ["tech-websocket"], "requiredFrom": "Architecture owner" }],
+  "allowedDependencyCycles": []
 }

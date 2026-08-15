@@ -1,12 +1,16 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
+import { fileURLToPath } from "node:url";
 import { analyzeBlueprint } from "../plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/compatibility-graph.ts";
 import { generateBlueprint } from "../plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/generate-structure.ts";
 
 const ruleText = await readFile(new URL("../plugins/blueprint-architect-plugin/skills/blueprint-architect/references/capability-rules.yaml", import.meta.url), "utf8");
+const execFileAsync = promisify(execFile);
 async function input(name: string): Promise<Record<string, any>> {
   return JSON.parse(await readFile(new URL(`./fixtures/blueprints/${name}`, import.meta.url), "utf8"));
 }
@@ -69,5 +73,26 @@ test("invalid input creates no project target", async () => {
     await assert.rejects(readFile(join(output, "ai-support-saas", "README.md")), /ENOENT/);
   } finally {
     await rm(output, { recursive: true, force: true });
+  }
+});
+
+test("compatibility CLI writes an analyzed specification consumable by the generator", async () => {
+  const root = await mkdtemp(join(tmpdir(), "universal-cli-"));
+  try {
+    const draftPath = join(root, "draft.json");
+    const analyzedPath = join(root, "analyzed.json");
+    await writeFile(draftPath, JSON.stringify(await input("unfamiliar-stack.json")), "utf8");
+    const scriptPath = fileURLToPath(new URL("../plugins/blueprint-architect-plugin/skills/blueprint-architect/scripts/compatibility-graph.ts", import.meta.url));
+    const rulesPath = fileURLToPath(new URL("../plugins/blueprint-architect-plugin/skills/blueprint-architect/references/capability-rules.yaml", import.meta.url));
+    const { stdout } = await execFileAsync(process.execPath, ["--experimental-strip-types", scriptPath, draftPath, rulesPath, analyzedPath]);
+    const summary = JSON.parse(stdout);
+    assert.equal(summary.uncoveredEdges.length, 0);
+    const analyzed = JSON.parse(await readFile(analyzedPath, "utf8"));
+    assert.ok(analyzed.findings.some((finding: any) => finding.status === "unverified"));
+    const output = join(root, "output");
+    const generated = await generateBlueprint(analyzed, output);
+    assert.ok(generated.manifest.includes("service/api/README.md"));
+  } finally {
+    await rm(root, { recursive: true, force: true });
   }
 });

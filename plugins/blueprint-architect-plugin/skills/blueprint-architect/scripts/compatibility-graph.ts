@@ -1,3 +1,6 @@
+import { access, readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import type {
   BlueprintSpec,
   CompatibilityCorrection,
@@ -200,3 +203,32 @@ export function analyzeBlueprint(input: unknown, ruleText: string): { spec: Blue
   const spec = validateBlueprintSpec({ ...initial, findings: report.findings });
   return { spec, report };
 }
+
+async function exists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+async function runCli(): Promise<void> {
+  const [specPath, rulesPath = resolve(dirname(fileURLToPath(import.meta.url)), "../references/capability-rules.yaml"), outputSpecPath] = process.argv.slice(2);
+  if (!specPath) throw new Error("Usage: compatibility-graph.ts <blueprint-spec.json> [capability-rules.yaml] [analyzed-spec.json]");
+  const analysis = analyzeBlueprint(
+    JSON.parse(await readFile(resolve(specPath), "utf8")) as unknown,
+    await readFile(resolve(rulesPath), "utf8"),
+  );
+  if (outputSpecPath) {
+    const target = resolve(outputSpecPath);
+    if (await exists(target)) throw new Error(`Analyzed specification already exists: ${target}`);
+    await writeFile(target, `${JSON.stringify(analysis.spec, null, 2)}\n`, "utf8");
+    process.stdout.write(`${JSON.stringify({ outputSpec: target, edgeCount: analysis.report.edges.length, findingCount: analysis.report.findings.length, uncoveredEdges: analysis.report.uncoveredEdges }, null, 2)}\n`);
+    return;
+  }
+  process.stdout.write(`${JSON.stringify({ spec: analysis.spec, report: { edges: analysis.report.edges, findings: analysis.report.findings, uncoveredEdges: analysis.report.uncoveredEdges } }, null, 2)}\n`);
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) await runCli();

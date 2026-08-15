@@ -9,5 +9,6 @@
   "dataFlows": [],
   "evidence": [],
   "findings": [],
-  "unresolved": [{ "id": "unresolved-runtime-evidence", "description": "Authoritative runtime and deployment compatibility evidence is missing.", "affectedIds": ["tech-novel", "deploy-novel"], "requiredFrom": "Technology owner" }]
+  "unresolved": [{ "id": "unresolved-runtime-evidence", "description": "Authoritative runtime and deployment compatibility evidence is missing.", "affectedIds": ["tech-novel", "deploy-novel"], "requiredFrom": "Technology owner" }],
+  "allowedDependencyCycles": []
 }

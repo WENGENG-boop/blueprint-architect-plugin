@@ -160,6 +160,7 @@ export interface BlueprintSpec {
   evidence: EvidenceRecord[];
   findings: CompatibilityFinding[];
   unresolved: UnresolvedItem[];
+  allowedDependencyCycles: string[][];
 }
 
 export interface GenerationResult {

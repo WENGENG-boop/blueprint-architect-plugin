@@ -45,3 +45,21 @@ test("rejects embedded secret fields", async () => {
   spec.project.token = "actual-secret-value";
   assert.throws(() => validateBlueprintSpec(spec), /project\.token must contain a configuration name/);
 });
+
+test("rejects duplicate module paths and undeclared dependency cycles", async () => {
+  const duplicatePath = await fixture();
+  duplicatePath.modules[1].path = duplicatePath.modules[0].path;
+  assert.throws(() => validateBlueprintSpec(duplicatePath), /duplicates another module path/);
+
+  const cycle = await fixture();
+  cycle.modules.find((module: any) => module.id === "mod-persistence").dependencyIds = ["mod-workspace"];
+  assert.throws(() => validateBlueprintSpec(cycle), /dependency cycle is not explicitly allowed/);
+  cycle.allowedDependencyCycles = [["mod-workspace", "mod-ai", "mod-conversations", "mod-persistence"]];
+  assert.equal(validateBlueprintSpec(cycle).allowedDependencyCycles.length, 1);
+});
+
+test("rejects module paths reserved for generated architecture artifacts", async () => {
+  const spec = await fixture();
+  spec.modules[0].path = "interfaces/custom";
+  assert.throws(() => validateBlueprintSpec(spec), /reserved generated directory/);
+});

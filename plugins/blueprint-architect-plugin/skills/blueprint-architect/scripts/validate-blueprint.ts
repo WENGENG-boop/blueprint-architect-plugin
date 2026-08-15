@@ -1,9 +1,12 @@
-import { isAbsolute } from "node:path";
+import { readFile } from "node:fs/promises";
+import { isAbsolute, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import type { BlueprintSpec, CompatibilityFinding, EvidenceRecord, ModuleDefinition } from "./blueprint-types.ts";
 
 const ID = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
 const PATH_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i;
+const RESERVED_TOP_LEVEL = new Set(["architecture", "interfaces"]);
 const SECRET_FIELD = /^(token|password|secret|private[_-]?key|api[_-]?key)$/i;
 const PRIMARY_EVIDENCE = new Set(["official_docs", "official_repository", "package_metadata"]);
 
@@ -75,6 +78,60 @@ function validateModulePath(module: Record<string, unknown>, index: number, issu
   if (segments.some((segment) => segment === "" || segment === "." || segment === ".." || !PATH_SEGMENT.test(segment) || WINDOWS_RESERVED.test(segment))) {
     issues.push(`${field} contains an unsafe path segment`);
   }
+  if (RESERVED_TOP_LEVEL.has(segments[0])) issues.push(`${field} uses reserved generated directory: ${segments[0]}`);
+}
+
+function validateDependencyCycles(modules: unknown, allowedInput: unknown, moduleIds: Set<string>, issues: string[]): void {
+  if (!Array.isArray(modules)) return;
+  const allowed = new Set<string>();
+  if (requiredArray(allowedInput, "allowedDependencyCycles", issues)) {
+    allowedInput.forEach((cycle, index) => {
+      const ids = validateStringList(cycle, `allowedDependencyCycles[${index}]`, issues, false);
+      ids.forEach((id) => {
+        if (!moduleIds.has(id)) issues.push(`allowedDependencyCycles[${index}] references unknown module: ${id}`);
+      });
+      allowed.add([...new Set(ids)].sort().join("|"));
+    });
+  }
+  const graph = new Map<string, string[]>();
+  modules.forEach((item) => {
+    const value = record(item);
+    if (value && typeof value.id === "string") graph.set(value.id, Array.isArray(value.dependencyIds) ? value.dependencyIds.filter((id): id is string => typeof id === "string") : []);
+  });
+  let nextIndex = 0;
+  const indexes = new Map<string, number>();
+  const lowLinks = new Map<string, number>();
+  const stack: string[] = [];
+  const onStack = new Set<string>();
+  const visit = (id: string) => {
+    indexes.set(id, nextIndex);
+    lowLinks.set(id, nextIndex);
+    nextIndex += 1;
+    stack.push(id);
+    onStack.add(id);
+    for (const dependencyId of graph.get(id) ?? []) {
+      if (!indexes.has(dependencyId)) {
+        visit(dependencyId);
+        lowLinks.set(id, Math.min(lowLinks.get(id)!, lowLinks.get(dependencyId)!));
+      } else if (onStack.has(dependencyId)) {
+        lowLinks.set(id, Math.min(lowLinks.get(id)!, indexes.get(dependencyId)!));
+      }
+    }
+    if (lowLinks.get(id) !== indexes.get(id)) return;
+    const component: string[] = [];
+    let member: string;
+    do {
+      member = stack.pop()!;
+      onStack.delete(member);
+      component.push(member);
+    } while (member !== id);
+    const isCycle = component.length > 1 || (graph.get(id) ?? []).includes(id);
+    const key = component.sort().join("|");
+    if (isCycle && !allowed.has(key)) issues.push(`module dependency cycle is not explicitly allowed: ${component.join(" -> ")}`);
+  };
+  [...graph.keys()].sort().forEach((id) => {
+    if (!indexes.has(id)) visit(id);
+  });
 }
 
 function scanSecretFields(value: unknown, path: string, issues: string[]): void {
@@ -187,6 +244,16 @@ export function validateBlueprintSpec(input: unknown): BlueprintSpec {
       if (testValue) validateReferences(testValue.requirementIds, requirementIds, `modules[${index}].tests[${testIndex}].requirementIds`, "requirement", issues);
     });
   });
+  if (Array.isArray(root.modules)) {
+    const paths = new Set<string>();
+    root.modules.forEach((item, index) => {
+      const value = record(item);
+      if (!value || typeof value.path !== "string") return;
+      if (paths.has(value.path)) issues.push(`modules[${index}].path duplicates another module path: ${value.path}`);
+      paths.add(value.path);
+    });
+  }
+  validateDependencyCycles(root.modules, root.allowedDependencyCycles, moduleIds, issues);
 
   if (Array.isArray(root.interfaces)) root.interfaces.forEach((item, index) => {
     const value = record(item);
@@ -219,3 +286,12 @@ export function validateModulePaths(modules: ModuleDefinition[]): void {
   modules.forEach((module, index) => validateModulePath(module as unknown as Record<string, unknown>, index, issues));
   if (issues.length) throw new BlueprintValidationError(issues);
 }
+
+async function runCli(): Promise<void> {
+  const [specPath] = process.argv.slice(2);
+  if (!specPath) throw new Error("Usage: validate-blueprint.ts <blueprint-spec.json>");
+  const spec = validateBlueprintSpec(JSON.parse(await readFile(resolve(specPath), "utf8")) as unknown);
+  process.stdout.write(`${JSON.stringify(spec, null, 2)}\n`);
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) await runCli();

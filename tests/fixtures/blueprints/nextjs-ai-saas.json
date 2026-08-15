@@ -48,5 +48,6 @@
     { "id": "finding-prisma-mysql", "edgeId": "edge-tech-prisma-depends-tech-mysql", "status": "verified_compatible", "affectedIds": ["tech-prisma", "tech-mysql"], "issue": "ORM and database versions require matching provider configuration.", "impact": "Incorrect provider or connection settings prevent migrations and runtime access.", "evidenceIds": ["ev-prisma-mysql"], "confidence": "high", "corrections": [] },
     { "id": "finding-serverless-connections", "edgeId": "edge-tech-prisma-deploy-deploy-vercel", "status": "conditional", "affectedIds": ["tech-prisma", "deploy-vercel"], "issue": "Persistent database connections run on ephemeral, scaling instances.", "impact": "Unbounded clients can exhaust database connections.", "evidenceIds": ["ev-local-serverless"], "confidence": "high", "corrections": [{ "id": "correction-pooling", "kind": "configuration", "description": "Use a serverless-safe pooled endpoint with explicit connection limits.", "affectedIds": ["tech-prisma", "deploy-vercel"], "migrationCost": "low", "operationalOwner": "Platform owner", "risks": ["Pool saturation under bursts"], "restoresRequirementIds": ["req-stream", "req-audit"] }] }
   ],
-  "unresolved": []
+  "unresolved": [],
+  "allowedDependencyCycles": []
 }
